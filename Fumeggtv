@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FumeGGTv - Live Streaming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2d3a4e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        section {
+            padding: 20px;
+            margin: 10px;
+        }
+
+        #profile-list ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        #profile-list li {
+            background-color: #fff;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            width: 30%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+        }
+
+        .follow-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        #live-stream {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        iframe {
+            width: 800px;
+            height: 450px;
+            border: none;
+        }
+
+        #ranking-list {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #2d3a4e;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Bem-vindo ao FumeGGTv</h1>
+    </header>
+
+    <!-- Lista de Perfis -->
+    <section id="profile-list">
+        <h2>Perfis de Streamers</h2>
+        <ul>
+            <li onclick="showStream('FUMEGG')">FUMEGG
+                <button class="follow-btn" onclick="toggleFollow(event, 'FUMEGG')">Seguir</button>
+            </li>
+            <li onclick="showStream('FGG JFZIN')">FGG JFZIN
+                <button class="follow-btn" onclick="toggleFollow(event, 'FGG JFZIN')">Seguir</button>
+            </li>
+            <li onclick="showStream('Streamer 3')">Streamer 3
+                <button class="follow-btn" onclick="toggleFollow(event, 'Streamer 3')">Seguir</button>
+            </li>
+            <li onclick="showStream('Streamer 4')">Streamer 4
+                <button class="follow-btn" onclick="toggleFollow(event, 'Streamer 4')">Seguir</button>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Transmissão ao Vivo -->
+    <section id="live-stream">
+        <h2 id="stream-title"></h2>
+        <iframe id="live-frame" allowfullscreen></iframe>
+    </section>
+
+    <!-- Ranking dos Streamers -->
+    <section id="ranking-list">
+        <h2>Ranking de Seguidores</h2>
+        <ul id="ranking">
+            <li id="rank-FUMEGG">FUMEGG: <span id="follower-count-FUMEGG">0</span> seguidores</li>
+            <li id="rank-FGG JFZIN">FGG JFZIN: <span id="follower-count-FGG JFZIN">0</span> seguidores</li>
+            <li id="rank-Streamer 3">Streamer 3: <span id="follower-count-Streamer 3">0</span> seguidores</li>
+            <li id="rank-Streamer 4">Streamer 4: <span id="follower-count-Streamer 4">0</span> seguidores</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 FumeGGTv. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // URLs das transmissões ao vivo
+        const streams = {
+            "FUMEGG": "https://www.youtube.com/embed/MxtVQTXdNaw?autoplay=1",
+            "FGG JFZIN": "https://www.youtube.com/embed/vCa3sp7Rw-A?autoplay=1",
+            "Streamer 3": "https://www.youtube.com/embed/ID_DO_VIDEO_STREAMER3?autoplay=1",
+            "Streamer 4": "https://www.youtube.com/embed/ID_DO_VIDEO_STREAMER4?autoplay=1",
+        };
+
+        // Armazenamento de seguidores
+        let followers = {
+            "FUMEGG": 100,  // Altere os números de seguidores diretamente aqui no código
+            "FGG JFZIN": 50,
+            "Streamer 3": 200,
+            "Streamer 4": 75,
+        };
+
+        // Função para exibir a transmissão ao vivo
+        function showStream(streamer) {
+            const streamTitle = document.getElementById("stream-title");
+            const liveFrame = document.getElementById("live-frame");
+            const liveStreamSection = document.getElementById("live-stream");
+
+            streamTitle.innerText = `Transmissão ao vivo de ${streamer}`;
+            liveFrame.src = streams[streamer];
+            liveStreamSection.style.display = "flex";
+        }
+
+        // Função para seguir/desseguir um streamer e atualizar o ranking
+        function toggleFollow(event, streamer) {
+            event.stopPropagation(); // Impede a execução do showStream ao clicar no botão Seguir
+            const followButton = event.target;
+            const followerCountElem = document.getElementById(`follower-count-${streamer}`);
+
+            if (followButton.innerText === "Seguir") {
+                followButton.innerText = "Seguindo";
+                followers[streamer]++;
+            } else {
+                followButton.innerText = "Seguir";
+                followers[streamer]--;
+            }
+
+            followerCountElem.innerText = followers[streamer];
+            updateRanking();
+        }
+
+        // Função para ordenar e atualizar o ranking dos streamers
+        function updateRanking() {
+            const rankingList = document.getElementById("ranking");
+            const rankedStreamers = Object.keys(followers).sort((a, b) => followers[b] - followers[a]);
+
+            rankingList.innerHTML = ""; // Limpa o ranking atual
+            rankedStreamers.forEach(streamer => {
+                const listItem = document.createElement("li");
+                listItem.id = `rank-${streamer}`;
+                listItem.innerHTML = `${streamer}: <span id="follower-count-${streamer}">${followers[streamer]}</span> seguidores`;
+                rankingList.appendChild(listItem);
+            });
+        }
+
+        // Inicialização
+        updateRanking();
+    </script>
+</body>
+</html>
